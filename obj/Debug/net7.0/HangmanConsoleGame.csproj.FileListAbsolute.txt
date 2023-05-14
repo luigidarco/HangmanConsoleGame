@@ -1,0 +1,15 @@
+C:\dev\HangmanConsoleGame\obj\Debug\net7.0\HangmanConsoleGame.csproj.AssemblyReference.cache
+C:\dev\HangmanConsoleGame\obj\Debug\net7.0\HangmanConsoleGame.GeneratedMSBuildEditorConfig.editorconfig
+C:\dev\HangmanConsoleGame\obj\Debug\net7.0\HangmanConsoleGame.AssemblyInfoInputs.cache
+C:\dev\HangmanConsoleGame\obj\Debug\net7.0\HangmanConsoleGame.AssemblyInfo.cs
+C:\dev\HangmanConsoleGame\obj\Debug\net7.0\HangmanConsoleGame.csproj.CoreCompileInputs.cache
+C:\dev\HangmanConsoleGame\bin\Debug\net7.0\HangmanConsoleGame.exe
+C:\dev\HangmanConsoleGame\bin\Debug\net7.0\HangmanConsoleGame.deps.json
+C:\dev\HangmanConsoleGame\bin\Debug\net7.0\HangmanConsoleGame.runtimeconfig.json
+C:\dev\HangmanConsoleGame\bin\Debug\net7.0\HangmanConsoleGame.dll
+C:\dev\HangmanConsoleGame\bin\Debug\net7.0\HangmanConsoleGame.pdb
+C:\dev\HangmanConsoleGame\obj\Debug\net7.0\HangmanConsoleGame.dll
+C:\dev\HangmanConsoleGame\obj\Debug\net7.0\refint\HangmanConsoleGame.dll
+C:\dev\HangmanConsoleGame\obj\Debug\net7.0\HangmanConsoleGame.pdb
+C:\dev\HangmanConsoleGame\obj\Debug\net7.0\HangmanConsoleGame.genruntimeconfig.cache
+C:\dev\HangmanConsoleGame\obj\Debug\net7.0\ref\HangmanConsoleGame.dll
