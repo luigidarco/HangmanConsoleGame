@@ -44,7 +44,6 @@ void setupPredefinedGame()
     PhraseRepository.add(customPhrase);
 
     Game game = new Game(PhraseRepository.getRandomPhrase());
-
     startGame(game);
 
     //PhraseRepository.add(phrase);
@@ -54,10 +53,11 @@ void startGame(Game game)
 {
     // Console.WriteLine("Hint: " + game.hint);
     // Console.WriteLine("Hidden Phrase: " + game.hiddenPhrase);
-
+    Hang p1 = new Hang();
     while (game.attempts < 6)
     {
         Console.Clear();
+        p1.Draw();
         Console.WriteLine(game.hiddenPhrase);
         Console.WriteLine("Hint: " + game.hint);
         Console.WriteLine("Guessed Letters: " + game.GetGuessedLettersString());
@@ -83,8 +83,10 @@ void startGame(Game game)
         else
         {
             game.attempts++;
+            p1.addHang(game.attempts);
             Console.WriteLine($"You missed! Attemps left: {(6 - game.attempts)}");
             Console.ReadLine();
+
 
             //Console.WriteLine(HangDraw());
         }
@@ -100,7 +102,9 @@ void startGame(Game game)
     if (game.attempts == 6)
     {
         Console.Clear();
-        Console.WriteLine("You lost!");
+        Console.Beep();
+        p1.Draw();
+        Console.WriteLine("\n > You lost! <");
         Console.ReadKey();
         Menu();
     }

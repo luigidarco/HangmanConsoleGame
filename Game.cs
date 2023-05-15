@@ -74,20 +74,4 @@ public class Game
 
         return sb.ToString();
     }
-
-    string HangDraw()
-    {
-        bool head, body, lArm, rArm, lLeg, rLeg; head = body = lArm = rArm = lLeg = rLeg = true;
-
-        string line1 = "_____";
-        string line2 = "|    |";
-        string line3 = head ? "|    O" : "|     ";
-        string line4 = body ? (lArm ? (rArm ? "|   -|-" : "|   -|") : "|    |") : "|     ";
-        string line5 = lLeg ? (rLeg ? "|   / \\" : "|   / ") : "|     ";
-        string line6 = "_";
-
-        return $"{line1}\n{line2}\n{line3}\n{line4}\n{line5}\n{line6}";
-    }
-
-
 }
