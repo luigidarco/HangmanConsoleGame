@@ -1,44 +1,24 @@
 public class Hang
 {
-    public bool Head { get; set; }
-    public bool Body { get; set; }
-    public bool LeftArm { get; set; }
-    public bool RightArm { get; set; }
-    public bool LeftLeg { get; set; }
-    public bool RightLeg { get; set; }
-
-    public Hang()
+    private Dictionary<string, bool> bodyParts = new Dictionary<string, bool>()
     {
-        Head = false;
-        Body = false;
-        LeftArm = false;
-        RightArm = false;
-        LeftLeg = false;
-        RightLeg = false;
-    }
+        { "Head", false },
+        { "Body", false },
+        { "LeftArm", false },
+        { "RightArm", false },
+        { "LeftLeg", false },
+        { "RightLeg", false }
+    };
 
-    public void addHang(int attempts)
+    public void AddBodyPart()
     {
-        switch (attempts)
+        foreach (KeyValuePair<string, bool> bodyPart in bodyParts)
         {
-            case 1:
-                Head = true;
+            if (!bodyPart.Value)
+            {
+                bodyParts[bodyPart.Key] = true;
                 break;
-            case 2:
-                Body = true;
-                break;
-            case 3:
-                LeftArm = true;
-                break;
-            case 4:
-                RightArm = true;
-                break;
-            case 5:
-                LeftLeg = true;
-                break;
-            case 6:
-                RightLeg = true;
-                break;
+            }
         }
     }
 
@@ -47,7 +27,7 @@ public class Hang
         Console.WriteLine("  _______");
         Console.WriteLine("  |     |");
 
-        if (Head)
+        if (bodyParts["Head"])
         {
             Console.WriteLine("  |     O");
         }
@@ -56,25 +36,29 @@ public class Hang
             Console.WriteLine("  |");
         }
 
-        if (LeftArm && Body && RightArm)
+        if (bodyParts["LeftArm"] && bodyParts["Body"] && bodyParts["RightArm"])
             Console.WriteLine("  |    /|\\");
-        else if (Body && LeftArm)
+        else if (bodyParts["LeftArm"] && bodyParts["Body"])
             Console.WriteLine("  |    /|");
-        else if (Body && RightArm)
+        else if (bodyParts["LeftArm"] && bodyParts["RightArm"])
             Console.WriteLine("  |     |\\");
-        else if (Body)
+        else if (bodyParts["LeftArm"])
             Console.WriteLine("  |     |");
         else
             Console.WriteLine("  |");
 
-        if (LeftLeg && RightLeg)
+        if (bodyParts["LeftLeg"] && bodyParts["RightLeg"])
             Console.WriteLine("  |    / \\");
-        else if (LeftLeg)
+        else if (bodyParts["LeftLeg"])
             Console.WriteLine("  |    / ");
-        else if (RightLeg)
+        else if (bodyParts["RightLeg"])
             Console.WriteLine("  |     \\");
         else
             Console.WriteLine("  |");
     }
 
+    internal void addBodyPart()
+    {
+        throw new NotImplementedException();
+    }
 }

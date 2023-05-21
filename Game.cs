@@ -3,29 +3,73 @@ using System.Text;
 
 public class Game
 {
-    public int attempts { get; set; } = 0;
-    public char[] secretPhrase { get; set; }
-    public char[] hiddenPhrase { get; set; }
-    public string hint { get; set; }
-    private List<char> _guessedLetters = new List<char>();
+    public char[] SecretPhrase { get; set; }
+    public char[] HiddenPhrase { get; set; }
+    public string Hint { get; set; }
+    public List<Player> Players { get; set; } = new List<Player>();
+    public int PlayerTurn { get; private set; } = 1;
+    public List<char> GuessedLetters { get; set; } = new List<char>();
 
-    public List<char> guessedLetters
+    public Game(Tuple<char[], string> phrase)
     {
-        get { return _guessedLetters; }
-        set
+        SecretPhrase = phrase.Item1;
+        Hint = phrase.Item2;
+        HiddenPhrase = HidPhraseOutput(SecretPhrase);
+    }
+
+    public Player GetCurrentPlayer()
+    {
+        return Players[PlayerTurn];
+    }
+
+    public void GuessLetter(char letter)
+    {
+
+        bool found = false;
+
+        for (int i = 0; i < SecretPhrase.Length; i++)
         {
-            _guessedLetters = value;
+            if (SecretPhrase[i] == letter)
+            {
+                HiddenPhrase[i] = letter;
+                GuessedLetters.Add(letter);
+                found = true;
+            }
+            else if (SecretPhrase[i] == ' ')
+            {
+                HiddenPhrase[i] = ' ';
+            }
+        }
+
+        if (!found)
+        {
+            Players[PlayerTurn].PlayerHang.addBodyPart();
+
         }
     }
-
-    public Game(Phrase phrase)
+    public string GetGuessedLetters()
     {
-        secretPhrase = phrase.Text.ToCharArray();
-        hiddenPhrase = CreateDisplayPhrase(phrase.Text);
-        hint = phrase.Hint;
+        StringBuilder output = new StringBuilder();
+
+        for (int i = 0; i < GuessedLetters.Count; i++)
+        {
+            output.Append(GuessedLetters[i]);
+
+            if (i < GuessedLetters.Count - 1)
+            {
+                output.Append(" - ");
+            }
+        }
+
+        return output.ToString();
     }
 
-    public char[] CreateDisplayPhrase(string phrase)
+    public void NextPlayer()
+    {
+
+    }
+
+    public char[] HidPhraseOutput(char[] phrase)
     {
         char[] displayPhrase = new char[phrase.Length];
         for (int i = 0; i < phrase.Length; i++)
@@ -44,34 +88,8 @@ public class Game
 
     public void updateHiddenPhrase(char letter)
     {
-        for (int i = 0; i < hiddenPhrase.Length; i++)
-        {
-            if (secretPhrase[i] == letter)
-            {
-                hiddenPhrase[i] = letter;
-            }
-            else if (secretPhrase[i] == ' ')
-            {
-                hiddenPhrase[i] = ' ';
-            }
-        }
+
     }
 
-    public string GetGuessedLettersString()
-    {
-        StringBuilder sb = new StringBuilder();
 
-
-        for (int i = 0; i < _guessedLetters.Count; i++)
-        {
-            sb.Append(_guessedLetters[i]);
-
-            if (i < _guessedLetters.Count - 1)
-            {
-                sb.Append(" - ");
-            }
-        }
-
-        return sb.ToString();
-    }
 }
