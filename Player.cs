@@ -5,7 +5,8 @@ public class Player
     public Hang PlayerHang = new Hang();
     public int Score { get; set; } = 0;
 
-
-
-
+    public Player(string name)
+    {
+        Name = name;
+    }
 }

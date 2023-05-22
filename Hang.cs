@@ -57,8 +57,15 @@ public class Hang
             Console.WriteLine("  |");
     }
 
-    internal void addBodyPart()
+    internal bool IsDead()
     {
-        throw new NotImplementedException();
+        foreach (KeyValuePair<string, bool> bodyPart in bodyParts)
+        {
+            if (!bodyPart.Value)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }
