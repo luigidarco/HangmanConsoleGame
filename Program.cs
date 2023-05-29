@@ -40,11 +40,8 @@ void Menu()
 
 void setupPredefinedGame()
 {
-
-    Console.WriteLine("This is a predefined game. \n");
-
     Console.Write("Input the secret phrase: ");
-    char[] secretPhrase = Console.ReadLine().ToCharArray();
+    char[] secretPhrase = Console.ReadLine().ToUpper().ToCharArray();
 
     Console.Write("Input a hint: ");
     string hint = Console.ReadLine();
@@ -56,14 +53,21 @@ void setupPredefinedGame()
 
 void setupRandomGame()
 {
-    Tuple<char[], string> randomPhrase = PhraseRepository.GetRandomPhrase();
-    Game game = new Game(randomPhrase);
+    Console.WriteLine("This is a random game. \n");
+    Console.WriteLine("How many rounds do you want to play? ");
+    int numberOfRounds = Convert.ToInt32(Console.ReadLine());
+
+    List<Tuple<char[], string>> randomPhrases = PhraseRepository.GetRandomPhrases(numberOfRounds);
+    Game game = new Game(randomPhrases);
     setupPlayers(game);
     startGame(game);
 
     // DEBUG:: Convert char[] to string
-    string secretPhrase = new string(game.SecretPhrase);
-    Console.WriteLine($"Secret Phrase: {secretPhrase}");
+    foreach (Tuple<char[], string> randomPhrase in randomPhrases)
+    {
+        string secretPhrase = new string(randomPhrase.Item1);
+        Console.WriteLine($"Secret Phrase: {secretPhrase}");
+    }
 }
 
 void setupPlayers(Game game)
@@ -86,8 +90,14 @@ void startGame(Game game)
         // Display the game
 
         Console.Clear();
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("[Round: " + game.RoundNumber + "]");
+
+
+
+
         Console.ForegroundColor = ConsoleColor.DarkBlue;
-        Console.WriteLine($"It's {game.GetCurrentPlayer().Name}'s turn. ");
+        Console.WriteLine($"[{game.GetCurrentPlayer().Name}'s turn.]");
         Console.ForegroundColor = ConsoleColor.Black;
 
         game.GetCurrentPlayer().PlayerHang.Draw();

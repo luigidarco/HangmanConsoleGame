@@ -3,16 +3,18 @@ using System.Text;
 
 public class Game
 {
+
     public char[] SecretPhrase { get; set; }
     public char[] HiddenPhrase { get; set; }
     public string Hint { get; set; }
     public List<Player> Players { get; set; } = new List<Player>();
+    public int RoundNumber { get; set; } = 1;
     public int PlayerTurn { get; private set; } = 0;
     public List<char> GuessedLetters { get; set; } = new List<char>();
     public const int scorePerHit = 10;
 
     // Constructor for a random game
-    public Game(Tuple<char[], string> phrase)
+    public Game(List<Tuple<char[], string>> randomPhrases)
     {
         SecretPhrase = phrase.Item1;
         Hint = phrase.Item2;
