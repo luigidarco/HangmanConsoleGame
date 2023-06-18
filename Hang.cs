@@ -27,6 +27,7 @@ public class Hang
         Console.WriteLine("  _______");
         Console.WriteLine("  |     |");
 
+        // [1] Head part 
         if (bodyParts["Head"])
         {
             Console.WriteLine("  |     O");
@@ -36,17 +37,17 @@ public class Hang
             Console.WriteLine("  |");
         }
 
+        // [2] Body and Arms part
         if (bodyParts["LeftArm"] && bodyParts["Body"] && bodyParts["RightArm"])
             Console.WriteLine("  |    /|\\");
         else if (bodyParts["LeftArm"] && bodyParts["Body"])
             Console.WriteLine("  |    /|");
-        else if (bodyParts["LeftArm"] && bodyParts["RightArm"])
-            Console.WriteLine("  |     |\\");
-        else if (bodyParts["LeftArm"])
+        else if (bodyParts["Body"])
             Console.WriteLine("  |     |");
         else
             Console.WriteLine("  |");
 
+        //[3] Legs part
         if (bodyParts["LeftLeg"] && bodyParts["RightLeg"])
             Console.WriteLine("  |    / \\");
         else if (bodyParts["LeftLeg"])

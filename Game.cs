@@ -3,98 +3,129 @@ using System.Text;
 
 public class Game
 {
-
+    public string GameMode { get; set; }
+    public List<Player> Players { get; set; } = new List<Player>();
+    public int PlayerTurn { get; private set; } = 0;
     public char[] SecretPhrase { get; set; }
     public char[] HiddenPhrase { get; set; }
     public string Hint { get; set; }
-    public List<Player> Players { get; set; } = new List<Player>();
-    public int RoundNumber { get; set; } = 1;
-    public int PlayerTurn { get; private set; } = 0;
-    public List<char> GuessedLetters { get; set; } = new List<char>();
+    public HashSet<char> guessedLetters { get; set; }
     public const int scorePerHit = 10;
-
-    // Constructor for a random game
-    public Game(List<Tuple<char[], string>> randomPhrases)
-    {
-        SecretPhrase = phrase.Item1;
-        Hint = phrase.Item2;
-        HiddenPhrase = HidPhraseOutput(SecretPhrase);
-    }
+    public const int scorePerPhrase = 50;
 
     // Constructor for a predefined game
-    public Game(char[] phrase, string hint)
+    public Game(string gameMode, char[] secretPhrase, string hint)
     {
-        SecretPhrase = phrase;
+        this.GameMode = gameMode;
+        SecretPhrase = secretPhrase;
         Hint = hint;
-        HiddenPhrase = HidPhraseOutput(SecretPhrase);
+        HiddenPhrase = Hid(SecretPhrase);
+        guessedLetters = new HashSet<char>();
     }
+    public void GuessLetter(string guess, int playerTurn)
+    {
+        Program.LoadingAnimation();
+        // Check if the input is a phrase or a single letter.
+        if (guess.Length > 1)
+        {
+            if (new string(SecretPhrase).Equals(guess))
+            {
+                Console.Beep(1000, 500);
 
+                int underscoreCount = 0;
+                foreach (char c in HiddenPhrase)
+                {
+                    if (c == '_')
+                    {
+                        underscoreCount++;
+                    }
+                }
+                int bonus = scorePerPhrase + (underscoreCount * scorePerHit);
+                Players[PlayerTurn].Score += bonus;
+
+                HiddenPhrase = SecretPhrase;
+                Console.WriteLine($"Congratulations! You guessed the secret phrase! \nYou earned {bonus} bonus points!");
+
+                Console.ReadKey();
+                return;
+            }
+            else
+            {
+                Players[PlayerTurn].Misses++;
+                Players[PlayerTurn].Hang.AddBodyPart();
+                Console.WriteLine("This is not the secret phrase!");
+                Console.ReadKey();
+                return;
+            }
+        }
+        // In case the input is a single letter, convert it to uppercase.
+        char letter = char.ToUpper(guess[0]);
+        int lettersFound = 0;
+        // Check if the letter has already been guessed.
+        if (guessedLetters.Contains(letter))
+        {
+            Console.WriteLine("This letter has already been guessed. Try again.");
+            Console.ReadKey();
+            return;
+        }
+        else
+        {
+            for (int i = 0; i < SecretPhrase.Length; i++)
+            {
+                // If the letter is found, add 10 points to the player's score.
+                if (SecretPhrase[i] == letter)
+                {
+                    lettersFound++;
+                    HiddenPhrase[i] = letter;
+                }
+                // Set or skip a whitespace in the hidden phrase. 
+                else if (SecretPhrase[i] == ' ')
+                {
+                    HiddenPhrase[i] = ' ';
+                }
+            }
+            if (lettersFound == 0)
+            {
+                Players[PlayerTurn].Misses++;
+                Players[PlayerTurn].Hang.AddBodyPart();
+                Console.WriteLine("Letter not found. Try again.");
+                Console.ReadKey();
+
+                // Switch to the next player [1 to max 4]
+                PlayerTurn = (PlayerTurn + 1) % Players.Count;
+            }
+            else
+            {
+                Players[PlayerTurn].Hits++;
+                Players[PlayerTurn].Score += lettersFound * scorePerHit;
+                Console.Beep(1000, 500);
+                Console.WriteLine($"You found {lettersFound} letter(s)! +{lettersFound * scorePerHit} points!");
+                Console.ReadKey();
+            }
+            guessedLetters.Add(letter);
+        }
+    }
     public Player GetCurrentPlayer()
     {
         return Players[PlayerTurn];
     }
-
-    public void GuessLetter(char letter, int playerTurn)
-    {
-
-        bool found = false;
-        int hits = 0;
-
-        for (int i = 0; i < SecretPhrase.Length; i++)
-        {
-            // If the letter is found, add 10 points to the player's score.
-            if (SecretPhrase[i] == letter)
-            {
-                hits++;
-                HiddenPhrase[i] = letter;
-
-                // Restrict the GuessedLetters list to only contain unique letters.
-                if (!found) { GuessedLetters.Add(letter); }
-                found = true;
-
-            }
-
-            // Set or skip a whitespace in the hidden phrase. 
-            else if (SecretPhrase[i] == ' ')
-            {
-                HiddenPhrase[i] = ' ';
-            }
-        }
-        if (!found)
-        {
-            Players[PlayerTurn].PlayerHang.AddBodyPart();
-            Console.WriteLine("You missed!");
-            Console.ReadKey();
-
-            // Switch to the next player
-            PlayerTurn = (PlayerTurn + 1) % Players.Count;
-
-        }
-        if (hits > 0)
-        {
-            Players[playerTurn].Score += (hits * scorePerHit);
-            System.Console.WriteLine($"You found {hits} letter(s)! +{hits * scorePerHit} points!");
-            Console.ReadKey();
-        }
-    }
-    public string GetGuessedLetters()
+    public string getGuessedLetters()
     {
         StringBuilder output = new StringBuilder();
-
-        for (int i = 0; i < GuessedLetters.Count; i++)
+        foreach (char letter in guessedLetters)
         {
-            output.Append(GuessedLetters[i]);
+            output.Append(letter);
 
-            if (i < GuessedLetters.Count - 1)
+            if (letter != guessedLetters.Last())
             {
-                output.Append(" - ");
+                output.Append(", ");
             }
         }
 
         return output.ToString();
     }
 
-    public char[] HidPhraseOutput(char[] phrase)
+    public char[] Hid(char[] phrase)
     {
         char[] displayPhrase = new char[phrase.Length];
         for (int i = 0; i < phrase.Length; i++)
@@ -122,7 +153,7 @@ public class Game
         int numDeadPlayers = 0;
         foreach (Player player in Players)
         {
-            if (player.PlayerHang.IsDead())
+            if (GetCurrentPlayer().Hang.IsDead())
             {
                 numDeadPlayers++;
             }
@@ -154,5 +185,10 @@ public class Game
             }
         }
         return winner;
+    }
+
+    public void DrawHang(Player player)
+    {
+        player.Hang.Draw();
     }
 }
